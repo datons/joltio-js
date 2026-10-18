@@ -1,0 +1,31 @@
+{
+  "name": "joltio",
+  "version": "0.1.0",
+  "description": "Cliente TypeScript de Joltio Data (api.joltio.app) para servidores: SvelteKit, Bun, Node y edge.",
+  "license": "MIT",
+  "type": "module",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "default": "./dist/index.js"
+    }
+  },
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "files": ["dist"],
+  "sideEffects": false,
+  "engines": { "node": ">=18" },
+  "repository": { "type": "git", "url": "git+https://github.com/datons/joltio-js.git" },
+  "homepage": "https://joltio.app/data/docs",
+  "keywords": ["joltio", "esios", "omie", "i90", "electricity", "energy", "sveltekit"],
+  "scripts": {
+    "build": "rm -rf dist && tsc -p tsconfig.build.json",
+    "check": "tsc --noEmit",
+    "test": "bun test",
+    "prepublishOnly": "bun run check && bun test && bun run build"
+  },
+  "devDependencies": {
+    "@types/bun": "1.2.19",
+    "typescript": "5.9.2"
+  }
+}
