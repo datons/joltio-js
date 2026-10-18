@@ -1,9 +1,9 @@
-# joltio
+# @joltioapp/client
 
 TypeScript client for [Joltio Data](https://joltio.app/data/docs) (`api.joltio.app`): Spanish electricity-market data (ESIOS, I90, OMIE, MIBGAS) with read-only SQL. Same methods as the Python client [`joltio`](https://pypi.org/project/joltio/), for servers: SvelteKit, Bun, Node and edge runtimes. No dependencies; it uses `fetch`.
 
 ```bash
-bun add joltio
+bun add @joltioapp/client
 ```
 
 ## Use it on the server
@@ -13,7 +13,7 @@ Your key gives access to your whole plan, so it must never reach a browser. The 
 ```ts
 // src/lib/server/joltio.ts
 import { env } from '$env/dynamic/private';
-import { Joltio } from 'joltio';
+import { Joltio } from '@joltioapp/client';
 
 export const joltio = new Joltio({ apiKey: env.JOLTIO_API_KEY });
 ```

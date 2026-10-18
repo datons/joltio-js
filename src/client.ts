@@ -37,7 +37,7 @@ class Http {
 
 	constructor(options: JoltioOptions) {
 		if (inBrowser() && !options.dangerouslyAllowBrowser)
-			throw new JoltioError('joltio runs on the server only: in SvelteKit, call it from +page.server.ts or +server.ts and send the rows to the page, never the key.');
+			throw new JoltioError('@joltioapp/client runs on the server only: in SvelteKit, call it from +page.server.ts or +server.ts and send the rows to the page, never the key.');
 		const apiKey = options.apiKey ?? envKey();
 		if (!apiKey) throw new JoltioError('Credentials required. Pass apiKey or set JOLTIO_API_KEY.');
 		this.#apiKey = apiKey;

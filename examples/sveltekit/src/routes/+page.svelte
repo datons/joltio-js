@@ -21,7 +21,7 @@
 
 <main>
 	<h1>Programa diario y final de una batería</h1>
-	<p class="sub">I90 de REE vía <code>joltio</code> · {data.day} · consultado en el servidor</p>
+	<p class="sub">I90 de REE vía <code>@joltioapp/client</code> · {data.day} · consultado en el servidor</p>
 
 	<form method="GET">
 		<label>Día <input type="date" name="day" value={data.day} /></label>
