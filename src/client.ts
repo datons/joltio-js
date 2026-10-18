@@ -95,6 +95,7 @@ export class DataApi {
 		return this.#http.request('GET', `${API_PREFIX}/coverage`, { params: { table } });
 	}
 
+	/* Searches the ESIOS indicator catalog. To find an I90 unit, use dimensions('unit', { q }). */
 	search(q: string, { column }: { column?: string } = {}): Promise<SearchResult> {
 		return this.#http.request('GET', `${API_PREFIX}/search`, { params: { q, column } });
 	}

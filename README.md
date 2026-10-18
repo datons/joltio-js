@@ -45,9 +45,9 @@ Outside SvelteKit, `new Joltio()` reads `JOLTIO_API_KEY` from the environment.
 | `query<T>(sql, { limit? })` | Decoded rows: datetimes as `Date`, integers and decimals as `number` (`bigint` past 2^53), dates as `YYYY-MM-DD` |
 | `queryRaw(sql, { limit? })` | The response as sent: `columns`, `rows`, `truncated`, `max_rows_applied` |
 | `coverage(table?)` | First and last data point, rows and freshness per program |
-| `search(q, { column? })` | Fuzzy search over units, companies and technologies |
+| `search(q, { column? })` | Search the ESIOS indicator catalog by name |
 | `metadata({ lang?, detail? })` | Schema, programs and global stats |
-| `dimensions(dim?, { detail?, q? })` | Unit, company or technology registry |
+| `dimensions(dim?, { detail?, q? })` | Unit, company or technology registry (`items`); find an I90 unit code with `dimensions('unit', { q })` |
 | `health()` | `true` when the API answers |
 
 Before querying a large table, read `coverage()` instead of `max(datetime)` or `count()`, and always filter by date and program in the SQL.

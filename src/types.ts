@@ -41,12 +41,15 @@ export interface SearchResult {
 	offset: number;
 }
 
+/* `items` is what the API returns today (one record per unit, company or technology); `values` and `records` are older shapes kept optional. */
 export interface DimensionResult {
 	dimension: string;
 	detail: string;
 	count: number;
-	values: string[];
-	records: Record<string, unknown>[];
+	items?: Record<string, unknown>[];
+	values?: string[];
+	records?: Record<string, unknown>[];
+	last_refreshed?: string;
 }
 
 export interface MetadataResult {
