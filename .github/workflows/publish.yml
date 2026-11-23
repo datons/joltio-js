@@ -1,0 +1,37 @@
+# Publishes @joltioapp/client to npm when a v<semver> tag is pushed.
+# Authenticates with npm trusted publishing (OIDC): no npm token exists anywhere.
+# The trusted publisher on npmjs.com must name this repository, this file (publish.yml) and the environment "npm".
+name: publish
+on:
+  push:
+    tags: ['v[0-9]+.[0-9]+.[0-9]+*']
+permissions:
+  contents: read
+concurrency:
+  group: publish
+  cancel-in-progress: false
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    environment: npm
+    permissions:
+      contents: read
+      id-token: write
+    steps:
+      - uses: actions/checkout@v4
+      - uses: oven-sh/setup-bun@v2
+      # Trusted publishing needs npm >= 11.5.1; Node 24 ships it.
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+      - name: Tag matches package version
+        run: test "$GITHUB_REF_NAME" = "v$(node -p 'require("./package.json").version')"
+      - run: bun install --frozen-lockfile
+      - run: bun run check
+      - run: bun test
+      - run: bun run build
+      - name: Publish
+        run: |
+          VERSION=$(node -p 'require("./package.json").version')
+          case "$VERSION" in *-*) TAG=next ;; *) TAG=latest ;; esac
+          npm publish --provenance --access public --tag "$TAG"
