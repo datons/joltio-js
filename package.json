@@ -1,6 +1,6 @@
 {
   "name": "@joltioapp/client",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Cliente TypeScript de Joltio Data (api.joltio.app) para servidores: SvelteKit, Bun, Node y edge.",
   "license": "MIT",
   "type": "module",
