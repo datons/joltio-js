@@ -1,4 +1,4 @@
-import { joltio } from '$lib/server/joltio';
+import { joltio } from '#lib/server/joltio.ts';
 import type { PageServerLoad } from './$types';
 
 type Unit = { unit: string; planta: string; agente: string | null; mwh: number };
@@ -10,7 +10,7 @@ export const load: PageServerLoad = async ({ url }) => {
 	next.setUTCDate(next.getUTCDate() + 1);
 	const range = `datetime >= '${day}' AND datetime < '${next.toISOString().slice(0, 10)}'`;
 
-	const units = await joltio.data.query<Unit>(
+	const units = await joltio().data.query<Unit>(
 		`SELECT unit, any(plant_name) AS planta, any(agent_group) AS agente, sum(abs(energy)) AS mwh
 		 FROM esios.archives_i90
 		 WHERE program = 'P48' AND ${range} AND technology = 'Batería electroquímica'
@@ -20,7 +20,7 @@ export const load: PageServerLoad = async ({ url }) => {
 	const unit = units.find((u) => u.unit === requested)?.unit ?? units[0]?.unit;
 
 	const hours = unit
-		? await joltio.data.query<Hour>(
+		? await joltio().data.query<Hour>(
 				`SELECT toStartOfHour(datetime) AS hora, program, sum(energy) AS mwh
 				 FROM esios.archives_i90
 				 WHERE unit = '${unit}' AND program IN ('PDBF', 'P48') AND ${range}

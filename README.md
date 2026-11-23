@@ -10,20 +10,41 @@ bun add @joltioapp/client
 
 Your key gives access to your whole plan, so it must never reach a browser. The client refuses to start in one.
 
+In SvelteKit 3, declare the key in `src/env.ts` and import it from `$app/env/private` (the `$env/*` modules are deprecated):
+
+```ts
+// src/env.ts
+import { building } from '$app/env';
+import { defineEnvVars } from '@sveltejs/kit/env';
+
+export const variables = defineEnvVars({
+	JOLTIO_API_KEY: {
+		// Required when the app starts; optional during `vite build`, which does not need it.
+		schema: (value) => {
+			if (!value && !building) throw new Error('Missing JOLTIO_API_KEY in .env');
+			return value ?? '';
+		}
+	}
+});
+```
+
+Create the client on first use, not when the module loads: `vite build` imports server modules without the key, and `new Joltio()` without a key throws `Credentials required`.
+
 ```ts
 // src/lib/server/joltio.ts
-import { env } from '$env/dynamic/private';
+import { JOLTIO_API_KEY } from '$app/env/private';
 import { Joltio } from '@joltioapp/client';
 
-export const joltio = new Joltio({ apiKey: env.JOLTIO_API_KEY });
+let client: Joltio | undefined;
+export const joltio = () => (client ??= new Joltio({ apiKey: JOLTIO_API_KEY }));
 ```
 
 ```ts
 // src/routes/+page.server.ts
-import { joltio } from '$lib/server/joltio';
+import { joltio } from '#lib/server/joltio.ts';
 
 export const load = async () => ({
-	prices: await joltio.data.query<{ day: Date; price: number }>(`
+	prices: await joltio().data.query<{ day: Date; price: number }>(`
 		SELECT toStartOfDay(datetime) AS day, avg(price) AS price
 		FROM (SELECT datetime, argMax(price, inserted_at) AS price FROM omie.prices
 		      WHERE country = 'ES' AND program = 'PDBF' AND datetime >= today() - 7
@@ -31,6 +52,8 @@ export const load = async () => ({
 		GROUP BY day ORDER BY day`)
 });
 ```
+
+SvelteKit reads `.env` from the app folder. If yours lives in a parent folder, add `env: { dir: '..' }` inside `sveltekit({...})` in `vite.config.ts`. On SvelteKit 2, read the key from `$env/dynamic/private` and import with `$lib/server/joltio`; the lazy client is the same.
 
 The page receives plain rows; `examples/sveltekit` charts the day-ahead against the final I90 schedule of a battery.
 
