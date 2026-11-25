@@ -2,7 +2,7 @@ import { decodeRows } from './decode.js';
 import { AuthenticationError, JoltioError, QueryError, RateLimitError } from './errors.js';
 import type { Coverage, DimensionResult, MetadataResult, QueryResult, Row, SearchResult } from './types.js';
 
-export const VERSION = '0.1.0';
+export const VERSION = '0.1.2';
 export const DEFAULT_BASE_URL = 'https://api.joltio.app';
 const API_PREFIX = '/data';
 

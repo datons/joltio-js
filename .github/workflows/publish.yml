@@ -24,6 +24,8 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: 24
+          registry-url: https://registry.npmjs.org
+          package-manager-cache: false
       - name: Tag matches package version
         run: test "$GITHUB_REF_NAME" = "v$(node -p 'require("./package.json").version')"
       - run: bun install --frozen-lockfile
@@ -34,4 +36,5 @@ jobs:
         run: |
           VERSION=$(node -p 'require("./package.json").version')
           case "$VERSION" in *-*) TAG=next ;; *) TAG=latest ;; esac
-          npm publish --provenance --access public --tag "$TAG"
+          npm --version
+          npm publish --provenance --access public --tag "$TAG" --loglevel verbose

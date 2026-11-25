@@ -1,5 +1,6 @@
 import { describe, expect, it } from 'bun:test';
-import { AuthenticationError, Joltio, JoltioError, QueryError, RateLimitError, decodeRows } from '../src/index.js';
+import { AuthenticationError, Joltio, JoltioError, QueryError, RateLimitError, VERSION, decodeRows } from '../src/index.js';
+import pkg from '../package.json';
 
 type Call = { url: URL; init: RequestInit };
 
@@ -129,4 +130,10 @@ describe.skipIf(!liveKey)('live API', () => {
 		expect(rows[0].hora.toISOString()).toBe('2026-06-30T22:00:00.000Z');
 		expect(typeof rows[0].mwh).toBe('number');
 	}, 60_000);
+});
+
+describe('VERSION', () => {
+	it('matches package.json, so the User-Agent reports the published version', () => {
+		expect(VERSION).toBe(pkg.version);
+	});
 });
